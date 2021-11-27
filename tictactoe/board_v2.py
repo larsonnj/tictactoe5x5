@@ -140,18 +140,20 @@ for i in range(25):
     button_grid_list.append('b'+str(i+1))
     button_grid_list[i].grid(row=row, column=col)
 
-#  Add menu bar
-def donothing():
-    return
-
+#  Add menu bar, menus and action buttons
 bNew=Button(root,width=15,height=1,command=lambda:newgame())
 bNew.grid(row=0,column=3)
 bNew.config(text="New Game")
 
 #  methods for the menus
+def donothing():
+    return
+
 def about():
     showinfo("About","Machine Learning 5x5 Tic Toc Toe Game.\nLast Update:  Nov 2021.")
     return
+
+
 
 def clear_board():
     numbers = numbers_orig
