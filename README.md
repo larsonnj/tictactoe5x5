@@ -5,8 +5,10 @@ algorithms are implemented. A user may teach the agent himself by
 playing the game for a couple of rounds, or he may apply an automated
 teacher agent. 
 
-2/18/2020:  Modified by Nathan Larson. <br>
-2/29/2020:  Modified by Benson Mathew. <br>
+2/18/2020:  Modified by Nathan Larson.
+2/29/2020:  Modified by Benson Mathew.
+11/26/2021: Modified by Nathan Larson, added info on prototype of UI
+
 
 ## Setup
 TensorFlow-2.1.0 and Keras-2.3.1 are required to be installed before running `play.py`.
@@ -54,6 +56,11 @@ This script is organized as follows.
 The GameLearner class holds the state of the current game sequence, which will continue until the player choses to stop or the teacher has finished the designated number of episodes.
 
 ## Running the Program
+
+1. If using Anaconda, launch Anaconda
+2. activate a previously used environment or create a new one
+   a.  conda activate <environment>
+3. Install the dependencies (shown above)
 
 *THESE INSTRUCTIONS ARE OUTDATED*. They will be updated soon.
 
