@@ -100,7 +100,8 @@ def destroys():
 
 
 
-# construct the 5x5 grid
+# construct the 5x5 grid:  I tried to put this into a loop, but ran into problems.  Should revisit later.
+# Got every button added in a loop with the same command iwth value of the max button number (i.e. 25 for a 5x5 grid)
 b1=Button(root,width=20,height=10,command=lambda:define_sign(1))
 b2=Button(root,width=20,height=10,command=lambda:define_sign(2))
 b3=Button(root,width=20,height=10,command=lambda: define_sign(3))
