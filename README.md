@@ -7,9 +7,14 @@ teacher agent.
 
 2/18/2020:  Modified by Nathan Larson.
 2/29/2020:  Modified by Benson Mathew.
-11/21/2021: Modified by Nathan Larson.
+10/28/2021: Modified by Nathan Larson.
     Updated code for new version of keras
 11/26/2021: Modified by Nathan Larson, added info on prototype of UI
+
+## Dependencies
+Python 3.8
+TensorFlow-2.1.0
+Keras-2.3.1
 
 ## Setup
 
