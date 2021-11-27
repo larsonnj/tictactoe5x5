@@ -44,15 +44,14 @@ def result(boards,mark):
 
     )
  
- 
+
+x=1
+y=''
 def define_sign(number):
     global x,y,numbers
 
-    print(str(number))
-    print(str(numbers))
     """ Checking which button has been clicked and checking if the button has been already clicked or not to avoid over-writing"""
     if number in numbers:
-      #  numbers.remove(number)
         if x%2==0:
             y='X'
             boards[number]=y
@@ -68,18 +67,15 @@ def define_sign(number):
             print("Player1 wins")
             showinfo("Result","Player1 wins")
             return
-            #destroys()
         elif(result(boards,mark) and mark=='O'):
             print("Player2 wins")
             showinfo("Result","Player2 wins")
             return
-            #destroys()
             
     # If we have not got any winner, display the dialogbox stating the match has bee tied.
     if(x>24 and result(boards,'X')==False and result(boards,'O')==False):
         showinfo("Result","Match Tied")
         return
-        #destroys()
          
  
  
@@ -90,15 +86,10 @@ label1.grid(row=0,column=1)
 l2=Label(root,text="player2 : O",font="times 15")
 l2.grid(row=0,column=2)
  
- 
+
 def destroys():
     # destroys the window when called
     root.destroy()
- 
-
-# construct the 5x5 grid
-
-
 
 # construct the 5x5 grid:  I tried to put this into a loop, but ran into problems.  Should revisit later.
 # Got every button added in a loop with the same command iwth value of the max button number (i.e. 25 for a 5x5 grid)
@@ -153,17 +144,13 @@ def about():
     showinfo("About","Machine Learning 5x5 Tic Toc Toe Game.\nLast Update:  Nov 2021.")
     return
 
-
-
 def clear_board():
-    numbers = numbers_orig
-    x=0
+    global numbers, x
+    x = 1
     for i in range(25):
         boards[i] = ' '
         button_grid_list[i].config(text='')
     return
-
-
 
 def newgame():
     clear_board()
