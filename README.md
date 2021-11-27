@@ -7,16 +7,20 @@ teacher agent.
 
 2/18/2020:  Modified by Nathan Larson.
 2/29/2020:  Modified by Benson Mathew.
+11/21/2021: Modified by Nathan Larson.
+    Updated code for new version of keras
 11/26/2021: Modified by Nathan Larson, added info on prototype of UI
 
-
 ## Setup
-TensorFlow-2.1.0 and Keras-2.3.1 are required to be installed before running `play.py`.
-These dependencies can be installed by running the following commands:
 
-    pip install tensorflow
-    pip install keras
-	pip install matplotlib
+1. Install Python
+2. Install Python extensions
+    TensorFlow-2.1.0 and Keras-2.3.1 are required to be installed before running `play.py`.
+    These dependencies can be installed by running the following commands:
+
+        pip install tensorflow
+        pip install keras
+        pip install matplotlib
 
 ## Code Structure
 
@@ -61,8 +65,6 @@ The GameLearner class holds the state of the current game sequence, which will c
 2. activate a previously used environment or create a new one
    a.  conda activate <environment>
 3. Install the dependencies (shown above)
-
-*THESE INSTRUCTIONS ARE OUTDATED*. They will be updated soon.
 
 #### Train a new agent manually
 To initialize a new agent and begin a new game loop, simply run:
