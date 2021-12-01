@@ -15,6 +15,7 @@ import tkinter.font as fnt
 from tkinter import *
 from tkinter.messagebox import showinfo
 import warnings
+import random
  
 #Removes all the warning from the output
 warnings.filterwarnings('ignore')
@@ -26,16 +27,21 @@ root=Tk()
  
 # List of all possible numbers on the board, 5x5 grid = 25 
 numbers=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25]
-numbers_orig = numbers.copy()
+numbers_orig = list(numbers)
 
 # Track wins
 player1_wins = 0
 player2_wins = 0
 
+# Friend and Computer Play
+computer_play = 0
+
 # y='X' for player1 and 'O' for player2
 y=""
 # x is the counter to keep counting the number of chances
+# Start at zero to start with first player of 'X'
 x=0
+
 #boards is a list to store the mark with respect to the cell number
 boards=["board"]*26
  
@@ -60,14 +66,14 @@ def result(boards,mark):
     )
  
 
-x=1
-y=''
+
 helv36 = fnt.Font( weight=fnt.BOLD)
 def define_sign(number):
     global x,y,numbers, player2_wins, player1_wins
 
     """ Checking which button has been clicked and checking if the button has been already clicked or not to avoid over-writing"""
     if number in numbers:
+        numbers.remove(number)
         if x%2==0:
             y='X'
             boards[number]=y
@@ -90,10 +96,42 @@ def define_sign(number):
             showinfo("Result","Player2 wins")
             return
             
-    # If we have not got any winner, display the dialogbox stating the match has bee tied.
-    if(x>24 and result(boards,'X')==False and result(boards,'O')==False):
-        showinfo("Result","Match Tied")
-        return
+        # If we have not got any winner, display the dialogbox stating the match has bee tied.
+        if(x>24 and result(boards,'X')==False and result(boards,'O')==False):
+            showinfo("Result","Match Tied")
+            return
+
+    # Execute play if computer player is active
+    if (computer_play == 1):
+        random_num = random.choice(numbers)
+        print("%d\n",random_num)
+        if x%2==0:
+            y='X'
+            boards[random_num]=y
+ 
+        elif x%2!=0:
+            y='O'
+            boards[random_num]=y
+                
+        button_grid_list[random_num-1].config(text=y)
+        x=x+1
+        mark=y
+
+        if(result(boards,mark) and mark=='X'):
+            print("Player1 wins")
+            player1_wins+=1
+            showinfo("Result","Player1 wins")
+            return
+        elif(result(boards,mark) and mark=='O'):
+            print("Player2 wins")
+            player2_wins+=1
+            showinfo("Result","Player2 wins")
+            return
+
+        # If we have not got any winner, display the dialogbox stating the match has bee tied.
+        if(x>24 and result(boards,'X')==False and result(boards,'O')==False):
+            showinfo("Result","Match Tied")
+            return
          
  
  
@@ -167,8 +205,10 @@ def about():
     return
 
 def clear_board():
-    global numbers, x
-    x = 1
+    global numbers, x, numbers_orig
+    numbers = list(numbers_orig)
+    x=0
+    y=''
     for i in range(25):
         boards[i] = ' '
         button_grid_list[i].config(text='')
@@ -176,13 +216,15 @@ def clear_board():
 
 
 def play_computer():
+    global computer_play
+    computer_play = 1
     clear_board()
-    #ask_player()
     return
 
 def play_friend():
+    global computer_play
+    computer_play = 0
     clear_board()
-    #ask_player()
     return
 
 menubar = Menu(root)
