@@ -16,8 +16,8 @@ from tkinter import *
 from tkinter.messagebox import showinfo
 import warnings
 import random
-from game import Game
-from agent import Qlearner, SARSAlearner, DQN
+from tictactoe.game import Game
+from tictactoe.agent import Qlearner, SARSAlearner, DQN
 import pickle
 
 #Removes all the warning from the output
@@ -236,7 +236,7 @@ agent = ""
 def load_agent():
     global agent
     try:
-        f = open('../qlearner_agent.pkl', 'rb')
+        f = open('./qlearner_agent.pkl', 'rb')
         agent = pickle.load(f)
         f.close() 
     except IOError:
