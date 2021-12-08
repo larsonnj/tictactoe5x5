@@ -16,7 +16,10 @@ from tkinter import *
 from tkinter.messagebox import showinfo
 import warnings
 import random
- 
+from game import Game
+from agent import Qlearner, SARSAlearner, DQN
+import pickle
+
 #Removes all the warning from the output
 warnings.filterwarnings('ignore')
  
@@ -229,6 +232,16 @@ def clear_board():
         button_grid_list[i].config(text='')
     return
 
+agent = ""
+def load_agent():
+    global agent
+    try:
+        f = open('../qlearner_agent.pkl', 'rb')
+        agent = pickle.load(f)
+        f.close() 
+    except IOError:
+        print("The agent file does not exist. Quitting.")
+        exit(1)
 
 def play_computer():
     global computer_play
@@ -273,7 +286,8 @@ def player_mode(player_mode):
 
 #ask_player()
 
+# load the agent
+load_agent()
 
 # Run the loop
-
 root.mainloop()
