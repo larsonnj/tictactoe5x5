@@ -48,6 +48,10 @@ class Game:
                     continue
                 self.board[row][col] = 'X'
                 break
+    
+    def setBoard(self,row,col,val):
+        self.board[row][col] = val
+        
 
     def agentMove(self, action):
         """
@@ -256,7 +260,7 @@ class Game:
                 # Break at this point, too many moves have been attempted.
                 # 5x5 board has 81 moves
                 log.error("The game is stuck after 25 turns!!!")
-                log.error("Exiting this game as a Draw.");
+                log.error("Exiting this game as a Draw.")
                 reward = 0
                 teacher_reward = 0
                 break
@@ -265,6 +269,72 @@ class Game:
         self.agent.update(prev_state, None, prev_action, None, reward)
         if self.teacher is not None and isinstance(self.teacher, AgentTeacher):
             self.teacher.update(prev_state, None, prev_action, None, teacher_reward)
+
+
+    def resetBoard(self):
+        # re-initialize the game board
+        self.board = [['-', '-', '-', '-', '-'],
+                      ['-', '-', '-', '-', '-'],
+                      ['-', '-', '-', '-', '-'],
+                      ['-', '-', '-', '-', '-'],
+                      ['-', '-', '-', '-', '-']]
+        return
+        
+    def playAgent(self):
+        """ 
+        Used from GUI to make the agent move and
+        calculate the reward and next move
+        based on current board configuration
+        """
+        counter = 0
+        teacher_reward = 0
+
+        # Check for Player win
+        # NJL:  This needs to be somewhere else, but is OK here for now
+        check = self.checkForEnd('X')
+        if not check == -1:
+            # Player wins
+            # game is over. No reward for agent, reward system changed from -1
+            teacher_reward = check
+            reward = -1
+            # if self.teacher is not None and isinstance(self.teacher, AgentTeacher):
+            if self.teacher is not None:
+                self.teacher.increment_wins()
+            return
+        else:
+            # game continues. 0 reward
+            reward = 0
+
+        # Initialize the agent's state and action
+        prev_state = getStateKey(self.board)
+        prev_action = self.agent.get_action(prev_state)
+
+        # execute oldAction, observe reward and state
+        self.agentMove(prev_action)
+        # Check for agent win
+        agent_check = self.checkForEnd('O')
+        if not agent_check == -1:
+            # Agent wins
+            # game is over. +1 reward if win, 0 if draw
+            reward = agent_check
+            teacher_reward = -1
+            return
+
+        new_state = getStateKey(self.board)
+
+        # determine new action (epsilon-greedy)
+        new_action = self.agent.get_action(new_state)
+        # update Q-values
+        self.agent.update(prev_state, new_state, prev_action, new_action, reward)
+
+        # Update Teacher's states:
+        if self.teacher is not None and isinstance(self.teacher, AgentTeacher):
+            self.teacher.update(prev_state, new_state, prev_action, new_action, teacher_reward)
+
+        # reset "previous" values
+        prev_state = new_state
+        prev_action = new_action
+
 
     def start(self):
         """
