@@ -12,3 +12,4 @@ Date:           Author:             Update:
 02/29/2020      Benson Mathew       Display total Teacher and Player wins.
 10/28/2021      Nathan Larson       Updated code to work with new tensorflow and keras modules
 11/24/2021      Nathan Larson       Added board GUI and menu options.  No integration to ML backend yet.
+12/10/2021      Nathan Larson       Added backend integration.  Updated GUI to use radio buttons and other improvements.

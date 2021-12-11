@@ -10,6 +10,11 @@ teacher agent.
 10/28/2021: Modified by Nathan Larson.
     Updated code for new version of keras
 11/26/2021: Modified by Nathan Larson, added info on prototype of UI
+12/10/2021: Updated code to integrate backend AI to new frontend
+
+## Further work
+1. Clean up the code, especially in the board_v*.py code.  Wrote as part of class project while learning and it needs to be put into a class and made more readable.
+2. Move the AI learning storage from an array in memory to be stored and referenced in a MySQL DB.
 
 ## Dependencies
 Python 3.8

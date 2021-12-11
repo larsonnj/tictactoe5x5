@@ -37,7 +37,7 @@ player1_wins = 0
 player2_wins = 0
 
 # Friend and Computer Play
-computer_play = 0
+computer_play = 1
 
 # y='X' for player1 and 'O' for player2
 y=""
@@ -47,7 +47,22 @@ x=0
 
 #boards is a list to store the mark with respect to the cell number
 boards=["board"]*26
- 
+
+agent=""
+game=""
+def load_agent():
+    global agent, game
+    try:
+        f = open('./qlearner_agent.pkl', 'rb')
+        agent = pickle.load(f)
+        f.close() 
+    except IOError:
+        print("The agent file does not exist. Quitting.")
+        exit(1)
+    # Define the AI gameboard, pass in agent.
+    game = Game(agent, None, True, False)
+
+
 def result(boards,mark):
     return (
         # horizontal
@@ -87,9 +102,77 @@ def update_wins():
     l2.config(text=yVal)
     return
 
+def setAIBoard(number, val):
+    if (number == 1):
+        game.setBoard(0,0,val)
+    if (number == 2):
+        game.setBoard(0,1,val)
+    if (number == 3):
+        game.setBoard(0,2,val)
+    if (number == 4):
+        game.setBoard(0,3,val)
+    if (number == 5):
+        game.setBoard(0,4,val)
+    if (number == 6):
+        game.setBoard(1,0,val)
+    if (number == 7):
+        game.setBoard(1,1,val)
+    if (number == 8):
+        game.setBoard(1,2,val)
+    if (number == 9):
+        game.setBoard(1,3,val)
+    if (number == 10):
+        game.setBoard(1,4,val)
+    if (number == 11):
+        game.setBoard(2,0,val)
+    if (number == 12):
+        game.setBoard(2,1,val)
+    if (number == 13):
+        game.setBoard(2,2,val)
+    if (number == 14):
+        game.setBoard(2,3,val)
+    if (number == 15):
+        game.setBoard(2,4,val)
+    if (number == 16):
+        game.setBoard(3,0,val)
+    if (number == 17):
+        game.setBoard(3,1,val)
+    if (number == 18):
+        game.setBoard(3,2,val)
+    if (number == 19):
+        game.setBoard(3,3,val)
+    if (number == 20):
+        game.setBoard(3,4,val)
+    if (number == 21):
+        game.setBoard(4,0,val)
+    if (number == 22):
+        game.setBoard(4,1,val)
+    if (number == 23):
+        game.setBoard(4,2,val)
+    if (number == 24):
+        game.setBoard(4,3,val)
+    if (number == 25):
+        game.setBoard(4,4,val)
+    
+
+def getStateKey(board):
+    """
+    Converts 2D list representing the board state into a string key
+    for that state. Keys are used for Q-value hashing.
+
+    Parameters
+    ----------
+    board : list of lists
+        the current game board
+    """
+    key = ''
+    for row in board:
+        for elt in row:
+            key += elt
+    return key
 
 def define_sign(number):
-    global x,y,numbers, player2_wins, player1_wins
+    global x,y,numbers, player2_wins, player1_wins, agent, game
 
     """ Checking which button has been clicked and checking if the button has been already clicked or not to avoid over-writing"""
     if number in numbers:
@@ -97,12 +180,12 @@ def define_sign(number):
         if x%2==0:
             y='X'
             boards[number]=y
- 
         elif x%2!=0:
             y='O'
             boards[number]=y
-             
+
         button_grid_list[number-1].config(text=y)
+        setAIBoard(number, y)
         x=x+1
         mark=y
         if(result(boards,mark) and mark=='X'):
@@ -110,33 +193,42 @@ def define_sign(number):
             player1_wins+=1
             update_wins()
             showinfo("Result","Player1 wins")
-
             return
         elif(result(boards,mark) and mark=='O'):
             print("Player2 wins")
             player2_wins+=1
             update_wins()
             showinfo("Result","Player2 wins")
-
             return
             
-        # If we have not got any winner, display the dialogbox stating the match has bee tied.
-        if(x>24 and result(boards,'X')==False and result(boards,'O')==False):
-            showinfo("Result","Match Tied")
-            return
+    # If we have not got any winner, display the dialogbox stating the match has been tied.
+    if(x>24 and result(boards,'X')==False and result(boards,'O')==False):
+        showinfo("Result","Match Tied")
+        return
 
     # Execute play if computer player is active
     if (computer_play == 1):
-        random_num = random.choice(numbers)
+        ai_state = getStateKey(game.board)
+        #print(ai_state)
+        ai_action = agent.get_action(ai_state)
+        #print(ai_action)
+        random_num = translateAI(ai_action)
+        #print(str(random_num))
+        #if (random_num in numbers):
+        #    print("This is a legal move")
+        #else:
+        #    print("this is not a legal move")
+        numbers.remove(random_num)
+        #print(numbers)
         if x%2==0:
             y='X'
             boards[random_num]=y
- 
         elif x%2!=0:
             y='O'
             boards[random_num]=y
                 
         button_grid_list[random_num-1].config(text=y)
+        setAIBoard(random_num,y)
         x=x+1
         mark=y
 
@@ -144,19 +236,78 @@ def define_sign(number):
             print("Player1 wins")
             player1_wins+=1
             showinfo("Result","Player1 wins")
+            clear_board()
             return
         elif(result(boards,mark) and mark=='O'):
             print("Player2 wins")
             player2_wins+=1
             showinfo("Result","Player2 wins")
+            clear_board()
             return
 
-        # If we have not got any winner, display the dialogbox stating the match has bee tied.
-        if(x>24 and result(boards,'X')==False and result(boards,'O')==False):
-            showinfo("Result","Match Tied")
-            return
+    # If we have not got any winner, display the dialogbox stating the match has bee tied.
+    if(x>24 and result(boards,'X')==False and result(boards,'O')==False):
+        showinfo("Result","Match Tied")
+        return
          
- 
+
+def translateAI(ai_action):
+    if (ai_action[0] == 0):
+        if (ai_action[1] == 0):
+            return 1
+        if (ai_action[1] == 1):
+            return 2
+        if (ai_action[1] == 2):
+            return 3
+        if (ai_action[1] == 3):
+            return 4
+        if (ai_action[1] == 4):
+            return 5
+    if (ai_action[0] == 1):
+        if (ai_action[1] == 0):
+            return 6
+        if (ai_action[1] == 1):
+            return 7
+        if (ai_action[1] == 2):
+            return 8
+        if (ai_action[1] == 3):
+            return 9
+        if (ai_action[1] == 4):
+            return 10
+    if (ai_action[0] == 2):
+        if (ai_action[1] == 0):
+            return 11
+        if (ai_action[1] == 1):
+            return 12
+        if (ai_action[1] == 2):
+            return 13
+        if (ai_action[1] == 3):
+            return 14
+        if (ai_action[1] == 4):
+            return 15
+    if (ai_action[0] == 3):
+        if (ai_action[1] == 0):
+            return 16
+        if (ai_action[1] == 1):
+            return 17
+        if (ai_action[1] == 2):
+            return 18
+        if (ai_action[1] == 3):
+            return 18
+        if (ai_action[1] == 4):
+            return 20
+    if (ai_action[0] == 4):
+        if (ai_action[1] == 0):
+            return 21
+        if (ai_action[1] == 1):
+            return 22
+        if (ai_action[1] == 2):
+            return 23
+        if (ai_action[1] == 3):
+            return 24
+        if (ai_action[1] == 4):
+            return 25
+
  
 
  
@@ -206,13 +357,15 @@ for i in range(25):
     button_grid_list[i].grid(row=row, column=col)
 
 #  Add menu bar, menus and action buttons
-bNewSingle=Button(root,width=15,height=1,command=lambda:play_computer())
-bNewSingle.grid(row=0,column=3)
-bNewSingle.config(text="Play Computer")
+bResetBoard=Button(root,width=15,height=1,command=lambda:clear_board())
+bResetBoard.grid(row=0,column=5)
+bResetBoard.config(text="Reset Board")
 
-bNewFriend=Button(root,width=15,height=1,command=lambda:play_friend())
-bNewFriend.grid(row=0,column=4)
-bNewFriend.config(text="Play Friend")
+# Use radio buttons to select friend or computer.  Default will be computer.
+var = IntVar()
+R1 = Radiobutton(root, text= "Play Computer", variable=var, value=1, highlightcolor='red',command=lambda:play_computer()).grid(row=0,column=3)
+R2 = Radiobutton(root, text= "Play Friend", variable=var, value=2, highlightcolor='red',command=lambda:play_friend()).grid(row=0,column=4)
+var.set(1)
 
 #  methods for the menus
 def donothing():
@@ -223,25 +376,19 @@ def about():
     return
 
 def clear_board():
-    global numbers, x, numbers_orig
+    global numbers, x, numbers_orig, game
     numbers = list(numbers_orig)
     x=0
     y=''
+    game.board = [['-', '-', '-', '-', '-'],
+                ['-', '-', '-', '-', '-'],
+                ['-', '-', '-', '-', '-'],
+                ['-', '-', '-', '-', '-'],
+                ['-', '-', '-', '-', '-']]
     for i in range(25):
         boards[i] = ' '
         button_grid_list[i].config(text='')
     return
-
-agent = ""
-def load_agent():
-    global agent
-    try:
-        f = open('./qlearner_agent.pkl', 'rb')
-        agent = pickle.load(f)
-        f.close() 
-    except IOError:
-        print("The agent file does not exist. Quitting.")
-        exit(1)
 
 def play_computer():
     global computer_play

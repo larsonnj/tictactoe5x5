@@ -51,7 +51,12 @@ class Game:
     
     def setBoard(self,row,col,val):
         self.board[row][col] = val
-        
+        print('    0   1   2   3   4\n')
+        for i, row in enumerate(self.board):
+            print('%i   ' % i, end='')
+            for elt in row:
+                print('%s   ' % elt, end='')
+            print('\n')        
 
     def agentMove(self, action):
         """
