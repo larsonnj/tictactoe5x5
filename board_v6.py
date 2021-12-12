@@ -193,12 +193,14 @@ def define_sign(number):
             player1_wins+=1
             update_wins()
             showinfo("Result","Player1 wins")
+            clear_board()
             return
         elif(result(boards,mark) and mark=='O'):
             print("Player2 wins")
             player2_wins+=1
             update_wins()
             showinfo("Result","Player2 wins")
+            clear_board()
             return
             
     # If we have not got any winner, display the dialogbox stating the match has been tied.
@@ -235,12 +237,14 @@ def define_sign(number):
         if(result(boards,mark) and mark=='X'):
             print("Player1 wins")
             player1_wins+=1
+            update_wins()
             showinfo("Result","Player1 wins")
             clear_board()
             return
         elif(result(boards,mark) and mark=='O'):
             print("Player2 wins")
             player2_wins+=1
+            update_wins()
             showinfo("Result","Player2 wins")
             clear_board()
             return
@@ -386,7 +390,7 @@ def clear_board():
                 ['-', '-', '-', '-', '-'],
                 ['-', '-', '-', '-', '-']]
     for i in range(25):
-        boards[i] = ' '
+        boards[i+1] = ' '
         button_grid_list[i].config(text='')
     return
 
